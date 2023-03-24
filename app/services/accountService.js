@@ -54,6 +54,23 @@ class AccountService {
     }
   }
   
+  
+  // Lấy về thông tin của một tài khoản 
+  static async getAccountByEmail(mail) {
+    try {
+      const account = await Account.findOne({ where: { mail } });
+      if (!account) {
+        return null;
+      }
+      return account.toJSON();
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
+  
+  
+}
 }
 
 module.exports = AccountService;
