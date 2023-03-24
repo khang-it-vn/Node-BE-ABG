@@ -10,4 +10,4 @@ const usdtAbi = [{"constant":true,"inputs":[],"name":"name","outputs":[{"name":"
 // Create USDT contract instance
 const usdtContract = new web3.eth.Contract(usdtAbi, usdtContractAddress);
 
-exports.module = usdtContract;
+module.exports = {usdtContract, web3};

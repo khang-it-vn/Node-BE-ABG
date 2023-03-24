@@ -1,9 +1,8 @@
-const Account = require('../models/account');
+const Account = require("../models/account");
 
 class AccountService {
   static async createAccount(accountData) {
     try {
-      
       const account = await Account.create(accountData);
       return account.toJSON();
     } catch (error) {
@@ -16,7 +15,7 @@ class AccountService {
     try {
       const account = await Account.findByPk(accountId);
       if (!account) {
-        throw new Error('Account not found');
+        throw new Error("Account not found");
       }
       const updatedAccount = await account.update(accountData);
       return updatedAccount.toJSON();
@@ -30,10 +29,10 @@ class AccountService {
     try {
       const account = await Account.findByPk(accountId);
       if (!account) {
-        throw new Error('Account not found');
+        throw new Error("Account not found");
       }
       await account.destroy();
-      return { message: 'Account deleted' };
+      return { message: "Account deleted" };
     } catch (error) {
       console.log(error);
       throw error;
@@ -53,9 +52,9 @@ class AccountService {
       throw error;
     }
   }
-  
-  
-  // Lấy về thông tin của một tài khoản 
+
+  // Lấy về thông tin của một tài khoản
+
   static async getAccountByEmail(mail) {
     try {
       const account = await Account.findOne({ where: { mail } });
@@ -69,7 +68,6 @@ class AccountService {
     }
   }
 
-  
   // Update mpass
   static async updateMpass(accountId, mpass) {
     try {
@@ -84,9 +82,5 @@ class AccountService {
       return null;
     }
   }
-  
-  
 }
-
-
 module.exports = AccountService;
