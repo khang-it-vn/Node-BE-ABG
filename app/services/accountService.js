@@ -68,9 +68,25 @@ class AccountService {
       throw error;
     }
   }
+
+  
+  // Update mpass
+  static async updateMpass(accountId, mpass) {
+    try {
+      const account = await Account.findByPk(accountId);
+      if (!account) {
+        return null;
+      }
+      const updatedAccount = await account.update({ mpass });
+      return updatedAccount.toJSON();
+    } catch (error) {
+      console.log(error);
+      return null;
+    }
+  }
   
   
 }
-}
+
 
 module.exports = AccountService;
