@@ -77,6 +77,7 @@ router.post("/login", (req, res) => {
 //  Lấy thông tin cá nhân
 router.get("/getUserInfo", verifyToken, checkmpass, async (req, res) => {
   let account = await AccountService.getAccountByEmail(req.userData.user.mail);
+
   res.status(200).json([
     account,
     {
@@ -107,7 +108,6 @@ router.post("/update-m-pass", verifyToken, async (req, res) => {
 });
 
 // Kiểm tra số dư tài khoản
-
 // API to get wallet balance
 // Nếu địa chỉ ví bị sai thì số dư vẫn trả về 0
 router.get("/getBalance", verifyToken, async (req, res) => {

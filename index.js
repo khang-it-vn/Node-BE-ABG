@@ -15,4 +15,4 @@ app.use("/public", express.static(__dirname + "/public"));
 const controller = require(__dirname + "/app/controllers");
 app.use(controller);
 
-app.listen(3000,() => console.log("listening on http://localhost:3000/"))
+app.listen(3000,() => console.log("listening on http://localhost:3000/"));
