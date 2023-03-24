@@ -1,15 +1,18 @@
-require("dotenv").config();
 const express = require("express");
+const path = require('path');
 const bodyParser = require('body-parser');
 
 const app = express();
-const port = process.env.PORT || 3000;
 
-app.use(bodyParser.urlencoded({ extended: false }));
+// parse application/json
 app.use(bodyParser.json());
 
-app.use("/public",express.static(__dirname + "/public"));
-const controller = require(__dirname + "/apps/controllers");
+// parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: false }));
+
+app.use("/public", express.static(__dirname + "/public"));
+
+const controller = require(__dirname + "/app/controllers");
 app.use(controller);
 
-const server = app.listen(port,() => console.log(`Server is listening port ${port}`))
+app.listen(3000,() => console.log("listening on http://localhost:3000/"))
