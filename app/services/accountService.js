@@ -3,6 +3,7 @@ const Account = require('../models/account');
 class AccountService {
   static async createAccount(accountData) {
     try {
+      
       const account = await Account.create(accountData);
       return account.toJSON();
     } catch (error) {
@@ -38,6 +39,21 @@ class AccountService {
       throw error;
     }
   }
+
+  // Kiểm tra xem mail đã tồn tại chưa
+  static async checkMailExist(mail) {
+    try {
+      const account = await Account.findOne({ where: { mail } });
+      if (account) {
+        return true;
+      }
+      return false;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
+  
 }
 
 module.exports = AccountService;
