@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
 
-// router.use("/user",require(__dirname + "/usercontroller"));
+router.use("/",require(__dirname + "/accountcontroller"));
 
 module.exports = router;
