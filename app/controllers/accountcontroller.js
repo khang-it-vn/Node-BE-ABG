@@ -65,6 +65,18 @@ router.post("/login", (req, res) => {
   verify(req.body.credential);
 });
 
+
+//  Lấy thông tin cá nhân
+router.get("/getUserInfo", verifyToken, checkmpass, async (req, res) => {
+  let account = await AccountService.getAccountByEmail(req.userData.user);
+  res.status(200).json([
+    account,
+    {
+      message: "info account",
+      success: true,
+    },
+  ]);
+});
 //
 
 module.exports = router;
