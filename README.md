@@ -160,4 +160,23 @@ Các thuộc tính của đối tượng này bao gồm:
 ```
 Chỉ cần quan tâm các thuộc tính in đậm, những thuộc tính này sẽ được hiển thị trên bảng thị trường
   
+##### 5. /getBalance
 
+method: GET <br>
+headers: { <br>
+            Authorizaton: `Bearer token`<br>
+          }<br>
+> success
+```
+statusCode = 200
+  {
+    success: true,
+    message: "get balance of address",
+    balance: <balance>,
+  }
+```
+> fail
+```
+statusCode = 500
+```
+##### 6. 
