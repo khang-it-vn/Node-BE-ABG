@@ -52,10 +52,10 @@ statusCode = 304
 ```
 ##### 3. /getUserInfo
 
-method: GET
-headers: {
-            Authorizaton: `Bearer token`
-          }
+method: GET<br>
+headers: {<br>
+            Authorizaton: `Bearer token`<br>
+          }<br>
 > success
 ```
 statusCode = 200
@@ -77,10 +77,10 @@ Nếu gặp status code 403 thì phải gọi api cập nhật mpass trước m�
 
 ##### 4. /binance/getPriceFollowPage/:page
 
-method: GET
-headers: {
-            Authorizaton: `Bearer token`
-          }
+method: GET <br>
+headers: { <br>
+            Authorizaton: `Bearer token`<br>
+          }<br>
 > success
 ```
 statusCode = 200
