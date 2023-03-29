@@ -46,7 +46,7 @@ router.post("/login", (req, res) => {
       claims.push("product.edit");
       claims.push("product.delete");
 
-      res.json([
+      res.status(200).json([
         {
           success: "true",
           message: "Login success",
