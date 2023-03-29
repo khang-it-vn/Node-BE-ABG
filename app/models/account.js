@@ -11,7 +11,7 @@ const Account = sequelize.define('account', {
     type: Sequelize.STRING,
     allowNull: false
   },
-  mail: {
+  email: {
     type: Sequelize.STRING,
     allowNull: false
   },
