@@ -50,6 +50,30 @@ statusCode = 304
   success: false
 }
 ```
+##### 3. /getUserInfo
+
+method: GET
+headers: {
+            Authorizaton: `Bearer token`
+          }
+> success
+```
+statusCode = 200
+[
+  account,
+  {
+    message: "info account",
+    success: true,
+  },
+]
+```
+
+> fail
+
+```
+statusCode = 403 
+```
+Nếu gặp status code 403 thì phải gọi api cập nhật mpass trước mới gọi các api khác được.
 
 
 
