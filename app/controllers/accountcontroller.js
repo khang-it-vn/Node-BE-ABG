@@ -87,7 +87,7 @@ router.get("/getUserInfo", verifyToken, checkmpass, async (req, res) => {
 });
 
 // Cập nhật thông tin mpass
-router.post("/update-m-pass", verifyToken, async (req, res) => {
+router.put("/update-m-pass", verifyToken, async (req, res) => {
   let account = await AccountService.getAccountByEmail(req.userData.user.email);
   const mpass = req.body.mpass;
   if (mpass.length != 5) {
