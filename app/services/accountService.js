@@ -54,7 +54,6 @@ class AccountService {
   }
 
   // Lấy về thông tin của một tài khoản
-
   static async getAccountByEmail(email) {
     try {
       const account = await Account.findOne({ where: { email } });
@@ -83,4 +82,5 @@ class AccountService {
     }
   }
 }
+
 module.exports = AccountService;
