@@ -5,7 +5,7 @@ var verifyToken = require("../util/verifyToken");
 var checkmpass = require("../util/checkmpass");
 const axios = require("axios");
 let { getBinanceCoinPrice } = require("./api/binanceapi");
-let CoinService = require("../services/coindService");
+let CoinService = require("../services/coinService");
 
 //  Add data cho bảng coin, sanh sách coin lấy từ sàn binance
 router.get("/getPrices", async (req, res) => {
