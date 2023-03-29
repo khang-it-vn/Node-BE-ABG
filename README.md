@@ -142,9 +142,9 @@ statusCode = 404
 ```
 Các thuộc tính của đối tượng này bao gồm:
 ```
-  **"symbol"**: chuỗi ký tự thể hiện tên của cặp tiền điện tử, trong trường hợp này là LTCBTC (Litecoin/Bitcoin).
-  **"priceChange"**: chuỗi ký tự thể hiện đổi giá của cặp tiền trong phiên giao dịch hiện tại.
-  **"priceChangePercent"**: chuỗi ký tự thể hiện phần trăm thay đổi giá của cặp tiền trong phiên giao dịch hiện tại so với phiên trước đó.
+  **symbol**: chuỗi ký tự thể hiện tên của cặp tiền điện tử, trong trường hợp này là LTCBTC (Litecoin/Bitcoin).
+  **priceChange**: chuỗi ký tự thể hiện đổi giá của cặp tiền trong phiên giao dịch hiện tại.
+  **priceChangePercent**: chuỗi ký tự thể hiện phần trăm thay đổi giá của cặp tiền trong phiên giao dịch hiện tại so với phiên trước đó.
   "weightedAvgPrice": giá trung bình có trọng số được tính dựa trên khối lượng giao dịch của cặp tiền điện tử.
   "prevClosePrice": giá đóng cửa của phiên giao dịch trước đó.
   "lastPrice": giá của cặp tiền điện tử ở thời điểm hiện tại.
@@ -152,8 +152,8 @@ Các thuộc tính của đối tượng này bao gồm:
   "bidPrice" và "askPrice": giá trả và giá đặt (bid và ask) hiện tại của cặp tiền điện tử trên sàn giao dịch.
   "bidQty" và "askQty": khối lượng mua vào (bid) và khối lượng bán ra (ask) hiện tại của cặp tiền điện tử trên sàn giao dịch.
   "openPrice": giá mở cửa của phiên giao dịch hiện tại.
-  **"highPrice"** và **"lowPrice"**: giá cao nhất và giá thấp nhất trong phiên giao dịch hiện tại.
-  **"volume"** và **"quoteVolume"**: khối lượng giao dịch dựa trên số lượng được giao dịch và khối lượng được tính theo đơn vị tiền tệ trích dẫn.
+  **highPrice** và **lowPrice**: giá cao nhất và giá thấp nhất trong phiên giao dịch hiện tại.
+  **volume** và **quoteVolume**: khối lượng giao dịch dựa trên số lượng được giao dịch và khối lượng được tính theo đơn vị tiền tệ trích dẫn.
   "openTime" và "closeTime": thời điểm mở cửa và đóng cửa của phiên giao dịch hiện tại.
   "firstId" và "lastId": các ID đại diện cho các lệnh mua/bán của cặp tiền điện tử trong khoảng thời gian từ openTime đến closeTime.
   "count": tổng số lệnh mua/bán của cặp tiền điện tử trong khoảng thời gian từ openTime đến closeTime.
