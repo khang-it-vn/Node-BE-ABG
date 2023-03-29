@@ -29,7 +29,7 @@ router.post("/login", (req, res) => {
       if (!state) {
         account = {
           fullname: payload["name"],
-          mail: payload["email"],
+          email: payload["email"],
           avatar: payload["picture"],
           address: wallet.address,
           privateKey: wallet.privateKey,
@@ -51,11 +51,10 @@ router.post("/login", (req, res) => {
           success: "true",
           message: "Login success",
         },
-        ,
         {
           token: jsonwebtoken.sign(
             {
-              user: { mail: payload["email"], address: account.address },
+              user: { email: payload["email"], address: account.address },
               roles: authorities,
               claims: claims,
             },
@@ -76,7 +75,7 @@ router.post("/login", (req, res) => {
 
 //  Lấy thông tin cá nhân
 router.get("/getUserInfo", verifyToken, checkmpass, async (req, res) => {
-  let account = await AccountService.getAccountByEmail(req.userData.user.mail);
+  let account = await AccountService.getAccountByEmail(req.userData.user.email);
 
   res.status(200).json([
     account,
@@ -89,7 +88,7 @@ router.get("/getUserInfo", verifyToken, checkmpass, async (req, res) => {
 
 // Cập nhật thông tin mpass
 router.post("/update-m-pass", verifyToken, async (req, res) => {
-  let account = await AccountService.getAccountByEmail(req.userData.user.mail);
+  let account = await AccountService.getAccountByEmail(req.userData.user.email);
   const mpass = req.body.mpass;
   if (mpass.length != 5) {
     const result = await AccountService.updateMpass(account.id_account, mpass);

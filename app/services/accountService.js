@@ -40,9 +40,9 @@ class AccountService {
   }
 
   // Kiểm tra xem mail đã tồn tại chưa
-  static async checkMailExist(mail) {
+  static async checkMailExist(email) {
     try {
-      const account = await Account.findOne({ where: { mail } });
+      const account = await Account.findOne({ where: { email } });
       if (account) {
         return true;
       }
@@ -55,9 +55,9 @@ class AccountService {
 
   // Lấy về thông tin của một tài khoản
 
-  static async getAccountByEmail(mail) {
+  static async getAccountByEmail(email) {
     try {
-      const account = await Account.findOne({ where: { mail } });
+      const account = await Account.findOne({ where: { email } });
       if (!account) {
         return null;
       }
