@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Mar 30, 2023 at 02:07 PM
+-- Generation Time: Mar 30, 2023 at 02:29 PM
 -- Server version: 8.0.31
 -- PHP Version: 7.4.33
 
@@ -29,12 +29,12 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `account` (
   `id_account` int NOT NULL,
-  `email` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `avatar` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `fullname` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `address` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `privatekey` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `mpass` varchar(7) COLLATE utf8mb4_general_ci DEFAULT NULL
+  `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `avatar` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `fullname` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `address` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `privatekey` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `mpass` varchar(7) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -53,8 +53,8 @@ INSERT INTO `account` (`id_account`, `email`, `avatar`, `fullname`, `address`, `
 
 CREATE TABLE `admin` (
   `id_admin` int NOT NULL,
-  `email` varchar(250) COLLATE utf8mb4_general_ci NOT NULL,
-  `fullname` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
+  `email` varchar(250) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `fullname` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `type` int NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -74,9 +74,35 @@ INSERT INTO `admin` (`id_admin`, `email`, `fullname`, `type`) VALUES
 
 CREATE TABLE `category` (
   `id` int NOT NULL,
-  `name` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `image` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `image` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `category`
+--
+
+INSERT INTO `category` (`id`, `name`, `image`) VALUES
+(1, 'Loai SP 1', 'hinhanh.png'),
+(2, 'Loai SP 2', 'hinhanh.png'),
+(3, 'Loai SP 3', 'hinhanh.png'),
+(4, 'Loai SP 4', 'hinhanh.png'),
+(5, 'Loai SP 5', 'hinhanh.png'),
+(6, 'Loai SP 6', 'hinhanh.png'),
+(7, 'Loai SP 7', 'hinhanh.png'),
+(8, 'Loai SP 8', 'hinhanh.png'),
+(9, 'Loai SP 9', 'hinhanh.png'),
+(10, 'Loai SP 10', 'hinhanh.png'),
+(11, 'Loai SP 11', 'hinhanh.png'),
+(12, 'Loai SP 12', 'hinhanh.png'),
+(13, 'Loai SP 13', 'hinhanh.png'),
+(14, 'Loai SP 14', 'hinhanh.png'),
+(15, 'Loai SP 15', 'hinhanh.png'),
+(16, 'Loai SP 16', 'hinhanh.png'),
+(17, 'Loai SP 17', 'hinhanh.png'),
+(18, 'Loai SP 18', 'hinhanh.png'),
+(19, 'Loai SP 19', 'hinhanh.png'),
+(20, 'Loai SP 10', 'hinhanh.png');
 
 -- --------------------------------------------------------
 
@@ -86,9 +112,9 @@ CREATE TABLE `category` (
 
 CREATE TABLE `coin` (
   `id_coin` int NOT NULL,
-  `fullname` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `image` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `symbol` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL
+  `fullname` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `image` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `symbol` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -2303,8 +2329,8 @@ CREATE TABLE `detailorder` (
 
 CREATE TABLE `doc` (
   `id_doc` int NOT NULL,
-  `title` varchar(250) COLLATE utf8mb4_general_ci NOT NULL,
-  `description` text COLLATE utf8mb4_general_ci NOT NULL
+  `title` varchar(250) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -2328,12 +2354,38 @@ CREATE TABLE `orders` (
 
 CREATE TABLE `product` (
   `id_product` int NOT NULL,
-  `name` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `image` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `description` text COLLATE utf8mb4_general_ci,
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `image` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
   `price` float NOT NULL,
   `id` int DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `product`
+--
+
+INSERT INTO `product` (`id_product`, `name`, `image`, `description`, `price`, `id`) VALUES
+(1, 'San pham 1', 'hinhanh.png', 'Mo ta san pham', 300, 5),
+(2, 'San pham 2', 'hinhanh.png', 'Mo ta san pham', 3000, 12),
+(3, 'San pham 3', 'hinhanh.png', 'Mo ta san pham', 300, 16),
+(4, 'San pham 4', 'hinhanh.png', 'Mo ta san pham', 5000, 13),
+(5, 'San pham 5', 'hinhanh.png', 'Mo ta san pham', 3250, 5),
+(6, 'San pham 6', 'hinhanh.png', 'Mo ta san pham', 3000, 9),
+(7, 'San pham 7', 'hinhanh.png', 'Mo ta san pham', 30000, 10),
+(8, 'San pham 8', 'hinhanh.png', 'Mo ta san pham', 1500, 20),
+(9, 'San pham 9', 'hinhanh.png', 'Mo ta san pham', 1300, 20),
+(10, 'San pham 10', 'hinhanh.png', 'Mo ta san pham', 2300, 5),
+(11, 'San pham 11', 'hinhanh.png', 'Mo ta san pham', 33300, 5),
+(12, 'San pham 12', 'hinhanh.png', 'Mo ta san pham', 21300, 20),
+(13, 'San pham 13', 'hinhanh.png', 'Mo ta san pham', 6300, 5),
+(14, 'San pham 14', 'hinhanh.png', 'Mo ta san pham', 76300, 15),
+(15, 'San pham 15', 'hinhanh.png', 'Mo ta san pham', 34300, 6),
+(16, 'San pham 16', 'hinhanh.png', 'Mo ta san pham', 2300, 7),
+(17, 'San pham 17', 'hinhanh.png', 'Mo ta san pham', 9300, 7),
+(18, 'San pham 18', 'hinhanh.png', 'Mo ta san pham', 3100, 13),
+(19, 'San pham 19', 'hinhanh.png', 'Mo ta san pham', 3400, 13),
+(20, 'San pham 20', 'hinhanh.png', 'Mo ta san pham', 3600, 1);
 
 -- --------------------------------------------------------
 
@@ -2430,7 +2482,7 @@ ALTER TABLE `admin`
 -- AUTO_INCREMENT for table `category`
 --
 ALTER TABLE `category`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT for table `coin`
@@ -2454,7 +2506,7 @@ ALTER TABLE `orders`
 -- AUTO_INCREMENT for table `product`
 --
 ALTER TABLE `product`
-  MODIFY `id_product` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id_product` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- Constraints for dumped tables
