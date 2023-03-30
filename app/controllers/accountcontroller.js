@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require("express");
 const router = express.Router();
 const { ethers } = require("ethers");
@@ -8,6 +9,7 @@ var verifyToken = require("../util/verifyToken");
 var checkmpass = require("../util/checkmpass");
 let { usdtContract, web3 } = require("../config/usdtContract");
 const jwtExpirySeconds = 1000;
+const AdminService = require("../services/adminService");
 
 // api login from google
 router.post("/login", (req, res) => {
@@ -21,23 +23,38 @@ router.post("/login", (req, res) => {
         idToken: token,
         audience: CLIENT_ID,
       });
+      // get thông tin từ api cloud google
       const payload = ticket.getPayload();
-      const wallet = ethers.Wallet.createRandom();
-
-      const state = await AccountService.checkMailExist(payload["email"]); // nếu email này tồn tại sẽ trả về true
       let account;
-      if (!state) {
-        account = {
-          fullname: payload["name"],
-          email: payload["email"],
-          avatar: payload["picture"],
-          address: wallet.address,
-          privateKey: wallet.privateKey,
-        };
-        AccountService.createAccount(account);
-      } else {
-        account = await AccountService.getAccountByEmail(payload["email"]);
+      let isAdmin = false;
+
+      // kiểm tra xem admin đã tồn taij chưa
+      let admin = AdminService.getByEmail(payload["email"]);
+      if (admin == null) {
+        const state = await AccountService.checkMailExist(payload["email"]); // nếu email này tồn tại sẽ trả về true
+        if (!state) {
+          // nếu email không tồn tại tiến hành tạo tài khoản và tạo ví 
+          
+          const wallet = ethers.Wallet.createRandom();
+          account = {
+            fullname: payload["name"],
+            email: payload["email"],
+            avatar: payload["picture"],
+            address: wallet.address,
+            privateKey: wallet.privateKey,
+          };
+          AccountService.createAccount(account);
+        } else {
+          // nếu email này không tồn tại trong bảng admin thì thực hiện tìm kiếm user
+          account = await AccountService.getAccountByEmail(payload["email"]);
+        }
+      } // nếu email này đang tồn tại trong bảng admin thì thực hiện account lúc này là admin
+      else {
+        isAdmin = true;
+        account = admin;
+        
       }
+
       var authorities = [];
       authorities.push("admin");
       authorities.push("customer");
@@ -46,6 +63,19 @@ router.post("/login", (req, res) => {
       claims.push("product.edit");
       claims.push("product.delete");
 
+      var roles = {
+        from: 0,
+        title: "User",
+      };
+      console.log(isAdmin);
+      if (isAdmin) {
+        let from = 2; // default là admin store value là 2
+        if (account.type === process.env.ADMIN_DOC) from = 1;
+        roles = {
+          from: from,
+          title: from === 1 ? "Admin Docs" : "Admin Store",
+        };
+      }
       res.status(200).json([
         {
           success: "true",
@@ -61,6 +91,9 @@ router.post("/login", (req, res) => {
             config.jwt.secret,
             { expiresIn: jwtExpirySeconds }
           ),
+        },
+        {
+          roles: roles,
         },
       ]);
     } catch (error) {
