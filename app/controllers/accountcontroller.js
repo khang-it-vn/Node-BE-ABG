@@ -29,7 +29,7 @@ router.post("/login", (req, res) => {
       let isAdmin = false;
 
       // kiểm tra xem admin đã tồn taij chưa
-      let admin = AdminService.getByEmail(payload["email"]);
+      let admin = await AdminService.getByEmail(payload["email"]);
       if (admin == null) {
         const state = await AccountService.checkMailExist(payload["email"]); // nếu email này tồn tại sẽ trả về true
         if (!state) {
@@ -67,14 +67,14 @@ router.post("/login", (req, res) => {
         from: 0,
         title: "User",
       };
-      console.log(isAdmin);
       if (isAdmin) {
         let from = 2; // default là admin store value là 2
-        if (account.type === process.env.ADMIN_DOC) from = 1;
+        if (account.type == process.env.ADMIN_DOC) 
+          from = 1;
         roles = {
           from: from,
           title: from === 1 ? "Admin Docs" : "Admin Store",
-        };
+        }; 
       }
       res.status(200).json([
         {
