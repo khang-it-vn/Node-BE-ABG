@@ -12,7 +12,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use(express.static('public'))
-
+// if you want get image from name using this url http://localhost:3000/img/<name_img>
 const controller = require(__dirname + "/app/controllers");
 app.use(controller);
 
