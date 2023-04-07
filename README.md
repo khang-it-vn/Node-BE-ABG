@@ -3,8 +3,8 @@ BE-NNM Hệ thống cổng thanh toán điện tử
 
 ## 1. API
 ##### 1. /Login
-Google authentication
 
+req: {credential: Google authentication} <br>
 response: 
 > success: 
 ``` 
@@ -77,6 +77,7 @@ Nếu gặp status code 403 thì phải gọi api cập nhật mpass trước m�
 
 ##### 4. /binance/getPriceFollowPage/:page
 
+req: page là số page mà bạn muốn lấy danh sách token<br>
 method: GET <br>
 headers: { <br>
             Authorizaton: `Bearer token`<br>
@@ -179,22 +180,147 @@ statusCode = 200
 ```
 statusCode = 500
 ```
-## 2.Admin API
-##### 2.1 /admindoc/add
 
-method: POST <br>
+##### 6. /user/detail/:id
+Lấy chi tiết bài viết document <br>
+req: :id là id bài viết<br>
+method: GET <br>
 headers: { <br>
             Authorizaton: `Bearer token`<br>
           }<br>
 > success
 ```
 statusCode = 200
-  {
-    success: true,
-    message: "add ducument"
-  }
+body: document
+  
 ```
+Nếu thành công trả về status code là 200 và đối tượng document muốn lấy
 > fail
 ```
-statusCode = 403
+statusCode = 404
 ```
+
+##### 7. /user/doc/:keyword
+Lấy danh sách document mà có title chứa keyword <br>
+req: keyword là từ khóa cần tìm trong title bài viết<br>
+method: GET <br>
+headers: { <br>
+            Authorizaton: `Bearer token`<br>
+          }<br>
+> success
+```
+statusCode = 200
+body: document
+  
+```
+Nếu thành công trả về status code là 200 và đối tượng document muốn lấy
+> fail
+```
+statusCode = 404
+```
+
+##### 7. /user/doc/:keyword
+Lấy danh sách document mà có title chứa keyword <br>
+req: keyword là từ khóa cần tìm trong title bài viết<br>
+method: GET <br>
+headers: { <br>
+            Authorizaton: `Bearer token`<br>
+          }<br>
+> success
+```
+statusCode = 200
+body: document
+  
+```
+Nếu thành công trả về status code là 200 và danh sách đối tượng document muốn tìm
+> fail
+```
+statusCode = 404
+```
+
+
+##### 8. /user/docs
+Lấy tất cả document hiện có <br>
+method: GET <br>
+headers: { <br>
+            Authorizaton: `Bearer token`<br>
+          }<br>
+> success
+```
+statusCode = 200
+body: documents
+  
+```
+Nếu thành công trả về status code là 200 và danh sách các đối tượng document
+
+
+
+
+## 2.Admin API
+##### 2.1 /admindoc/add
+Dùng để thêm một bài viết mới <br>
+req: <br>
+method: POST <br>
+headers: { <br>
+            Authorizaton: `Bearer token`<br>
+          }<br>
+body: { <br>
+           title<br>
+           description<br>
+          }<br>
+> success
+```
+statusCode = 201
+body: document
+  
+```
+Nếu thành công trả về status code là 201 và đối tượng vừa được khởi tạo
+> fail
+```
+statusCode = 500
+```
+Nếu không thành công status code 500 kèm message lỗi hệ thống, lỗi chỉ xảy ra khi title và description null
+
+##### 2.2 /admindoc/update
+Dùng để cập nhật một bài viết<br>
+
+method: PUT <br>
+headers: { <br>
+            Authorizaton: `Bearer token`<br>
+          }<br>
+body: { <br>
+          id <br>
+           title<br>
+           description<br>
+          }<br>
+> success
+```
+statusCode = 200
+body: newdocument
+  
+```
+Nếu thành công trả về status code là 200 và đối tượng vừa được cập nhật
+> fail
+```
+statusCode = 404
+```
+
+##### 2.3 /admindoc/delete/:id
+Dùng để xóa bài viết <br>
+req: id là id của document muốn xóa
+method: DELETE <br>
+headers: { <br>
+            Authorizaton: `Bearer token`<br>
+          }<br>
+> success
+```
+statusCode = 200
+body: newdocument
+  
+```
+Nếu thành công trả về status code là 200 và đối tượng vừa được cập nhật
+> fail
+```
+statusCode = 404
+```
+
