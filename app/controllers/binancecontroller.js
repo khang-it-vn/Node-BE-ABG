@@ -44,7 +44,7 @@ router.get("/getDataOfCoin/:symbol", verifyToken, async (req, res) => {
       console.error(error);
     });
 });
-router.get("/getPriceFollowPage/:page", verifyToken, async (req, res) => {
+router.get("/getPriceFollowPage/:page", async (req, res) => {
   try {
     let page = req.params.page;
     let coins = await CoinService.getCoinList(page);

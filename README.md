@@ -179,4 +179,22 @@ statusCode = 200
 ```
 statusCode = 500
 ```
-##### 6. 
+## 2.Admin API
+##### 2.1 /admindoc/add
+
+method: POST <br>
+headers: { <br>
+            Authorizaton: `Bearer token`<br>
+          }<br>
+> success
+```
+statusCode = 200
+  {
+    success: true,
+    message: "add ducument"
+  }
+```
+> fail
+```
+statusCode = 403
+```
