@@ -1,4 +1,4 @@
-require('dotenv').config();
+require("dotenv").config();
 const express = require("express");
 const router = express.Router();
 const { ethers } = require("ethers");
@@ -33,8 +33,8 @@ router.post("/login", (req, res) => {
       if (admin == null) {
         const state = await AccountService.checkMailExist(payload["email"]); // nếu email này tồn tại sẽ trả về true
         if (!state) {
-          // nếu email không tồn tại tiến hành tạo tài khoản và tạo ví 
-          
+          // nếu email không tồn tại tiến hành tạo tài khoản và tạo ví
+
           const wallet = ethers.Wallet.createRandom();
           account = {
             fullname: payload["name"],
@@ -52,7 +52,6 @@ router.post("/login", (req, res) => {
       else {
         isAdmin = true;
         account = admin;
-        
       }
 
       var authorities = [];
@@ -69,12 +68,11 @@ router.post("/login", (req, res) => {
       };
       if (isAdmin) {
         let from = 2; // default là admin store value là 2
-        if (account.type == process.env.ADMIN_DOC) 
-          from = 1;
+        if (account.type == process.env.ADMIN_DOC) from = 1;
         roles = {
           from: from,
           title: from === 1 ? "Admin Docs" : "Admin Store",
-        }; 
+        };
       }
       res.status(200).json([
         {
