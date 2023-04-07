@@ -1,4 +1,5 @@
 const Doc = require('../models/doc');
+const {Op} = require("sequelize");
 
 class DocService{
 
@@ -17,7 +18,7 @@ class DocService{
             const oldDoc = await Doc.findByPk(primaryKey);
             if(!oldDoc)
             {
-                throw new Error("404: Not Found");
+                return null;
             }
             const updateDoc = await oldDoc.update(newDoc);
             return updateDoc.toJSON();
@@ -32,10 +33,10 @@ class DocService{
             const doc = await Doc.findByPk(pk);
             if(!doc)
             {
-                throw new Error("404: Not Found");
+                return false;
             }
             await doc.destroy();
-            return {message: "deleted"};
+            return true;
         } catch (error) {
             console.log(error);
         }
@@ -44,10 +45,10 @@ class DocService{
     static async getById(pk)
     {
         try {
-            const doc = await Doc.getById(pk);
+            const doc = await Doc.findByPk(pk); // nếu doc không có giá trị thì giá trị của doc là undefined
             if(!doc)
             {
-                throw new Error("404: Not Found");
+               return null;
             }
             return doc.toJSON();
         } catch (error) {
@@ -58,12 +59,22 @@ class DocService{
     static async getByContentTitle(title)
     {
         try {
-            const doc = await Doc.findOne({where: {title}});
-            if(!doc)
+            const docs = await Doc.findAll({where: {title: {[Op.like]: `%${title}%`}}});
+            if(!docs)
             {
-                return new Error("404: Not Found");
+               return null;
             }
-            return doc.toJSON();
+            return docs.map(doc => doc.toJSON());
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    static async getAll()
+    {
+        try {
+            const docs = await Doc.findAll();
+            return docs.map(doc => doc.toJSON());
         } catch (error) {
             console.log(error);
         }
