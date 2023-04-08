@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const verifyToken = require("../util/verifyToken");
 const DocService = require("../services/docService");
-
+const CategoryService = require('../services/categoryService');
 
 router.get("/detail/:id", verifyToken, async(req, res) => {
     id = req.params.id;
@@ -32,4 +32,30 @@ router.get("/docs", async (req, res) => {
     let docs = await DocService.getAll();
     return res.status(200).json(docs);
 })
+
+
+// category
+router.get("/categorys",verifyToken, async(req, res) => {
+    try {
+        
+        const categorys = await CategoryService.findAll();
+        return res.status(200).json(categorys);
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json(error);
+    }
+})
+
+router.get("/category/:id", verifyToken, async(req, res) => {
+    const id = req.params.id;
+    const category = await CategoryService.findByPk(id);
+    if(category)
+    {
+        return res.status(200).json(category);
+    }
+    return res.status(404).json({messgae: "404: Not Found"});
+})
+
+
+// end category
 module.exports = router;
