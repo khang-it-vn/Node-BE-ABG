@@ -266,6 +266,58 @@ statusCode = 404
 ```
 
 
+##### 11. /user/product/:id
+Lấy product theo id <br>
+req: <br>
+method: GET <br>
+headers: { <br>
+            Authorizaton: `Bearer token`<br>
+          }<br>
+> success
+```
+statusCode = 200
+body: product
+  
+```
+Nếu thành công trả về status code là 200 và đối tượng product cần tìm
+>fail
+```
+  statusCode = 404
+```
+##### 12. /user/products/:keyword
+Lấy products theo keyword <br>
+req: <br>
+method: GET <br>
+headers: { <br>
+            Authorizaton: `Bearer token`<br>
+          }<br>
+> success
+```
+statusCode = 200
+body: products
+  
+```
+Nếu thành công trả về status code là 200 và danh sách đối tượng product cần tìm
+>fail
+```
+  statusCode = 404
+```
+##### 13. /user/products
+Lấy danh sách products <br>
+req: <br>
+method: GET <br>
+headers: { <br>
+            Authorizaton: `Bearer token`<br>
+          }<br>
+> success
+```
+statusCode = 200
+body: products
+  
+```
+Nếu thành công trả về status code là 200 và danh sách đối tượng product 
+
+
 ## 2.Admin API
 ##### 2.1 /admindoc/add
 Dùng để thêm một bài viết mới <br>
@@ -334,3 +386,37 @@ Nếu thành công trả về status code là 200 và đối tượng vừa đư
 statusCode = 404
 ```
 
+##### 2.4. /adminstore/product
+Thêm product <br>
+req: <br>
+method: POST <br>
+headers: { <br>
+            Authorizaton: `Bearer token`<br>
+          }<br>
+> success
+body: product
+```
+statusCode = 200
+body: product
+  
+```
+Nếu thành công trả về status code là 200 và đối tượng product vừa thêm
+
+##### 2.5. /adminstore/product/:id
+Xóa product theo id <br>
+req: <br>
+method: DELETE <br>
+headers: { <br>
+            Authorizaton: `Bearer token`<br>
+          }<br>
+> success
+```
+statusCode = 200
+body: message
+  
+```
+Nếu thành công trả về status code là 200 
+>fail
+```
+  statusCode = 404
+```

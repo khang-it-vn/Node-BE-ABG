@@ -45,6 +45,7 @@ class DocService{
     static async getById(pk)
     {
         try {
+            console.log(Doc);
             const doc = await Doc.findByPk(pk); // nếu doc không có giá trị thì giá trị của doc là undefined
             if(!doc)
             {
@@ -80,5 +81,5 @@ class DocService{
         }
     }
 }
-
+ 
 module.exports = DocService;
