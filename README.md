@@ -218,27 +218,6 @@ Nếu thành công trả về status code là 200 và đối tượng document m
 ```
 statusCode = 404
 ```
-
-##### 7. /user/doc/:keyword
-Lấy danh sách document mà có title chứa keyword <br>
-req: keyword là từ khóa cần tìm trong title bài viết<br>
-method: GET <br>
-headers: { <br>
-            Authorizaton: `Bearer token`<br>
-          }<br>
-> success
-```
-statusCode = 200
-body: document
-  
-```
-Nếu thành công trả về status code là 200 và danh sách đối tượng document muốn tìm
-> fail
-```
-statusCode = 404
-```
-
-
 ##### 8. /user/docs
 Lấy tất cả document hiện có <br>
 method: GET <br>
@@ -254,6 +233,37 @@ body: documents
 Nếu thành công trả về status code là 200 và danh sách các đối tượng document
 
 
+##### 9. /user/categorys
+Lấy tất cả category hiện có <br>
+method: GET <br>
+headers: { <br>
+            Authorizaton: `Bearer token`<br>
+          }<br>
+> success
+```
+statusCode = 200
+body: categorys
+  
+```
+
+##### 10. /user/category/:id
+Lấy category theo id <br>
+req: <br>
+method: GET <br>
+headers: { <br>
+            Authorizaton: `Bearer token`<br>
+          }<br>
+> success
+```
+statusCode = 200
+body: category
+  
+```
+Nếu thành công trả về status code là 200 và đối tượng document muốn lấy
+> fail
+```
+statusCode = 404
+```
 
 
 ## 2.Admin API
