@@ -4,6 +4,8 @@ const verifyToken = require("../util/verifyToken");
 const DocService = require("../services/docService");
 const CategoryService = require('../services/categoryService');
 
+const ProductService = require('../services/productService');
+
 router.get("/detail/:id", verifyToken, async(req, res) => {
     id = req.params.id;
     if(id)
@@ -58,4 +60,33 @@ router.get("/category/:id", verifyToken, async(req, res) => {
 
 
 // end category
+
+// start product
+
+router.get('/product/:id',verifyToken, async(req, res) => {
+    const id = req.params.id;
+    const product = await ProductService.findByPk(id);
+    if(product)
+    {
+        return res.status(200).json(product);
+    }
+    return res.status(404);
+})
+
+router.get('/products/:keyword', verifyToken, async(req, res) => {
+    const keyword = req.params.keyword;
+    const products = await ProductService.findByNameProduct(keyword);
+    if(products)
+    {
+        return res.status(200).json(products);
+    }
+    return res.status(404).json({message: "404: NOt Found"});
+})
+
+router.get('/products', verifyToken, async (req, res) => {
+    const products = await ProductService.findAll();
+    return res.status(200).json(products);
+})
+// end product
+
 module.exports = router;
