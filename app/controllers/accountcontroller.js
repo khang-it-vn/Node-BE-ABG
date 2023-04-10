@@ -381,4 +381,35 @@ router.get("/getHistoryReceive", verifyToken, async (req, res) => {
   }
 }); 
 
+router.get('/checkAccountFromAddress/:address', verifyToken, async (req, res ) => {
+    try {
+      const address = req.params.address;
+      const wallet = await AccountService.getAccountByAddress(address);
+      if(!wallet)
+      {
+        return res.status(404).json({message: "Undefined account in solo wallet"});
+      }
+
+      return res.status(200).json({
+        fullname: wallet.fullname,
+        address: wallet.address,
+        id_account: wallet.id_account,
+        avatar: wallet.avatar
+      });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({message: 'server has error with content: ' + error.message});
+    }
+});
+
+router.get("/getBalanceFromAddress/:address", verifyToken, async (req, res) => {
+  const balance = await usdtContract.methods
+    .balanceOf(req.params.address)
+    .call();
+  res.json({
+    success: true,
+    message: "get balance of address",
+    balance: web3.utils.fromWei(balance, "mwei"),
+  });
+});
 module.exports = router;
