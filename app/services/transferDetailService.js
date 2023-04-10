@@ -1,5 +1,5 @@
 const TransferDetail = require('../models/transferdetail');
-
+const Account = require('../models/account');
 
 // Define the TransferDetailService class
 class TransferDetailService {
@@ -14,7 +14,7 @@ class TransferDetailService {
         tip,
         time_create: new Date()
       });
-      return transferDetail;
+      return transferDetail.toJSON();
     } catch (error) {
       console.error(error);
     }
@@ -24,7 +24,7 @@ class TransferDetailService {
   static async getTransferDetailByTxh(txh) {
     try {
       const transferDetail = await TransferDetail.findByPk(txh);
-      return transferDetail;
+      return transferDetail.toJSON();
     } catch (error) {
       console.error(error);
     }
@@ -57,6 +57,49 @@ class TransferDetailService {
       return true;
     } catch (error) {
       console.error(error);
+    }
+  }
+
+
+  static async getStranferDetailHistory(id_account_sender)
+  {
+    try {
+      const transferDetails = await TransferDetail.findAll({
+        where: {id_account_sender},
+        include: [
+          { model: Account, as: 'sender', attributes: ['fullname', 'email', 'address'] },
+          { model: Account, as: 'receiver', attributes: ['fullname', 'email', 'address'] }
+        ]
+      });
+
+      if(!transferDetails)
+      {
+        return null;
+      }
+      return transferDetails.map(transferDetail =>transferDetail.toJSON());
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+
+  static async getReceiveHistory(id_account_receiver)
+  {
+    try {
+      const transferDetails = await TransferDetail.findAll({
+        where: {id_account_receiver},
+        include: [
+          { model: Account, as: 'sender', attributes: ['fullname', 'email', 'address'] },
+          { model: Account, as: 'receiver', attributes: ['fullname', 'email', 'address'] }
+        ]
+      });
+
+      if(!transferDetails)
+      {
+        return null;
+      }
+      return transferDetails.map(transferDetail => transferDetail.toJSON());
+    } catch (error) {
+      throw new Error(error);
     }
   }
 }
