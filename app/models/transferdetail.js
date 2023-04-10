@@ -1,6 +1,6 @@
 const sequelize = require('../database/database');
 const {Sequelize, DataTypes} = require('sequelize');
-
+const Account = require('./account');
 
 // Define the TransferDetail model
 const TransferDetail = sequelize.define('TransferDetail', {
@@ -40,6 +40,10 @@ const TransferDetail = sequelize.define('TransferDetail', {
     tableName: 'transferdetail',
     timestamps: false
   });
+  
+  TransferDetail.belongsTo(Account, { as: 'sender', foreignKey: 'id_account_sender' });
+  TransferDetail.belongsTo(Account, { as: 'receiver', foreignKey: 'id_account_receiver' });
+
   
   // Export the TransferDetail model
   module.exports = TransferDetail;

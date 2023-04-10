@@ -216,8 +216,8 @@ router.post("/transferUSDT", verifyToken, async (req, res) => {
     let txObject = {
       nonce: web3.utils.toHex(txCount),
       to: process.env.USDT_CONTRACT_ADDRESS,
-      gasLimit: web3.utils.toHex(210000),
-      gasPrice: web3.utils.toHex(gasPrice), 
+      gasLimit: web3.utils.toHex(210000), // sdjadks
+      gasPrice: web3.utils.toHex(gasPrice), // dsyfuidsf
       data: usdtContract.methods.transfer(toAddress, amountToSend).encodeABI(),
     };
     let toAccount = await AccountService.getAccountByAddress(toAddress);
@@ -336,5 +336,49 @@ router.get("/checkStatueTransaction/:address", async (req, res) => {
     res.status(404).json({ message: "No transaction found for this address" });
   }
 });
+
+
+// API to get transfer detail using id_account_sender
+router.get("/getHistoryTransfer", verifyToken, async (req, res) => {
+  try {
+    let account = await AccountService.getAccountByEmail(req.userData.user.email);
+    const transferDetails = await TransferDetailService.getStranferDetailHistory(
+      account.id_account
+    );
+    res.json({
+      success: true,
+      message: "Get transfer detail successfully",
+      transferDetails: transferDetails,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({
+      success: false,
+      message: "Failed to get transfer detail with error " + error.message,
+    });
+  }
+}); 
+
+
+// API to get transfer detail using id_account_sender
+router.get("/getHistoryReceive", verifyToken, async (req, res) => {
+  try {
+    let account = await AccountService.getAccountByEmail(req.userData.user.email);
+    const transferDetails = await TransferDetailService.getReceiveHistory(
+      account.id_account
+    );
+    res.json({
+      success: true,
+      message: "Get receive stranfer detail successfully",
+      transferDetails: transferDetails,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({
+      success: false,
+      message: "Failed to get receive transfer detail with error " + error.message,
+    });
+  }
+}); 
 
 module.exports = router;
