@@ -8,15 +8,14 @@ var verifyToken = require("../util/verifyToken");
 var checkmpass = require("../util/checkmpass");
 const jwtExpirySeconds = 1000000000;
 const AdminService = require("../services/adminService");
-const TransferDetailService = require('../services/transferDetailService');
+const TransferDetailService = require("../services/transferDetailService");
 
 // web3
-const EthereumTx = require('ethereumjs-tx');
-const Tx = require('ethereumjs-tx').Transaction;
-const { Buffer } = require('buffer');
+const EthereumTx = require("ethereumjs-tx");
+const Tx = require("ethereumjs-tx").Transaction;
+const { Buffer } = require("buffer");
 let { usdtContract, web3 } = require("../config/usdtContract");
-const EthereumUtil = require('ethereumjs-util');
-
+const EthereumUtil = require("ethereumjs-util");
 
 // api login from google
 router.post("/login", (req, res) => {
@@ -39,27 +38,37 @@ router.post("/login", (req, res) => {
       let admin = await AdminService.getByEmail(payload["email"]);
       if (admin == null) {
         const state = await AccountService.checkMailExist(payload["email"]); // nếu email này tồn tại sẽ trả về true
-         // nếu email không tồn tại tiến hành tạo tài khoản và tạo ví
+        // nếu email không tồn tại tiến hành tạo tài khoản và tạo ví
         if (!state) {
           // const wallet = ethers.Wallet.createRandom(); -> create wallet with ether
 
           // create wallet with web3
           const wallet = web3.eth.accounts.create();
-          let privateKey = '';
-          if (typeof wallet.privateKey === 'string' && wallet.privateKey.startsWith('0x')) {
+          let privateKey = "";
+          if (
+            typeof wallet.privateKey === "string" &&
+            wallet.privateKey.startsWith("0x")
+          ) {
             privateKey = wallet.privateKey.substring(2); // remove '0x' prefix
           }
           const tx = {
-            nonce: web3.utils.toHex(await web3.eth.getTransactionCount(wallet.address)),
+            nonce: web3.utils.toHex(
+              await web3.eth.getTransactionCount(wallet.address)
+            ),
             gasPrice: web3.utils.toHex(await web3.eth.getGasPrice()),
             gasLimit: web3.utils.toHex(21000),
-            to: '0x0000000000000000000000000000000000000000',
-            value: web3.utils.toHex(web3.utils.toWei('1', 'ether')),
-            data: '0x',
+            to: "0x0000000000000000000000000000000000000000",
+            value: web3.utils.toHex(web3.utils.toWei("1", "ether")),
+            data: "0x",
           };
-          const signedTx = await web3.eth.accounts.signTransaction(tx, privateKey);
-          const privateKeyBuffer = Buffer.from(privateKey, 'hex');
-          const publicKey = EthereumUtil.bufferToHex(EthereumUtil.privateToPublic(privateKeyBuffer));
+          const signedTx = await web3.eth.accounts.signTransaction(
+            tx,
+            privateKey
+          );
+          const privateKeyBuffer = Buffer.from(privateKey, "hex");
+          const publicKey = EthereumUtil.bufferToHex(
+            EthereumUtil.privateToPublic(privateKeyBuffer)
+          );
 
           console.log("wallet created with info: ");
 
@@ -139,7 +148,14 @@ router.get("/getUserInfo", verifyToken, checkmpass, async (req, res) => {
   let account = await AccountService.getAccountByEmail(req.userData.user.email);
 
   res.status(200).json([
-    account,
+    {
+      id_account: account.id_account,
+      fullname: account.fullname,
+      avatar: account.avatar,
+      address: account.address,
+      publicKey: account.publicKey,
+      email: account.email,
+    },
     {
       message: "info account",
       success: true,
@@ -180,57 +196,56 @@ router.get("/getBalance", verifyToken, async (req, res) => {
     balance: web3.utils.fromWei(balance, "mwei"),
   });
 });
-
-// API để chuyển USDT từ một ví sang ví khác
-router.post("/transferUSDT",verifyToken, async (req, res) => {
-  // Lấy địa chỉ và số lượng USDT cần chuyển từ request body
-  const { toAddress, amount } = req.body;
-  // Lấy địa chỉ ví nguồn từ userData được lưu trữ trong request
-  const fromAddress = req.userData.user.address;
-  // Tạo một đối tượng hợp đồng USDT từ địa chỉ hợp đồng USDT
-  // Lấy số chữ số thập phân của USDT
-  const decimals = await usdtContract.methods.decimals().call();
-  // Chuyển đổi số lượng USDT cần chuyển sang đơn vị wei
-  const amountToSend = web3.utils.toWei(amount.toString(), "ether");
-  // Lấy số lần giao dịch đã được thực hiện từ địa chỉ nguồn
-  const txCount = await web3.eth.getTransactionCount(fromAddress);
-  // Tạo một đối tượng giao dịch
-  const txObject = {
-    nonce: web3.utils.toHex(txCount),
-    to: process.env.USDT_CONTRACT_ADDRESS,
-    gasLimit: web3.utils.toHex(210000),
-    gasPrice: web3.utils.toHex(web3.utils.toWei("10", "gwei")),
-    data: usdtContract.methods
-      .transfer(toAddress, amountToSend)
-      .encodeABI(),
-  };
-  const toAccount = await AccountService.getAccountByAddress(toAddress);
-  const fromAccount = await AccountService.getAccountByAddress(fromAddress);
-
-  // Tạo một đối tượng giao dịch ký và gửi
+router.post("/transferUSDT", verifyToken, async (req, res) => {
   try {
-        const gasPrice = await web3.eth.getGasPrice(); // Lấy giá gas hiện tại
-        const gasLimit = await usdtContract.methods
-          .transfer(toAddress, amountToSend)
-          .estimateGas({ from: fromAddress }); // Ước tính giới hạn gas cần thiết
+    let { toAddress, amount } = req.body;
+    console.log(toAddress);
+    let fromAddress = req.userData.user.address;
+    let decimals = await usdtContract.methods.decimals().call();
+    let amountToSend = web3.utils.toWei(amount.toString(), "ether");
+    let txCount = await web3.eth.getTransactionCount(fromAddress);
 
-    const tx = new Tx(txObject, { chain: "ropsten", hardfork: "petersburg" });
+    let gasPrice = await web3.eth.getGasPrice();
+    console.log(gasPrice);
+    let gasLimit = await web3.eth.estimateGas({
+      to: toAddress,
+      data: usdtContract.methods.transfer(toAddress, amountToSend).encodeABI(),
+      from: fromAddress,
+    });
+    console.log(gasLimit);
+    let txObject = {
+      nonce: web3.utils.toHex(txCount),
+      to: process.env.USDT_CONTRACT_ADDRESS,
+      gasLimit: web3.utils.toHex(210000),
+      gasPrice: web3.utils.toHex(gasPrice), 
+      data: usdtContract.methods.transfer(toAddress, amountToSend).encodeABI(),
+    };
+    let toAccount = await AccountService.getAccountByAddress(toAddress);
+    let fromAccount = await AccountService.getAccountByAddress(fromAddress);
+    let tx = new Tx(txObject, { chain: "mainnet", hardfork: "petersburg" });
+
     tx.sign(Buffer.from(fromAccount.privateKey.substring(2), "hex"));
-    const serializedTx = tx.serialize();
-    const raw = "0x" + serializedTx.toString("hex");
-    const receipt = await web3.eth.sendSignedTransaction(raw);
-    const transferDetail = await TransferDetailService.createTransferDetail(receipt.transactionHash,fromAccount.id_account,toAccount.id_account,amount,gasPrice * gasLimit);
+    let serializedTx = tx.serialize();
+    let raw = "0x" + serializedTx.toString("hex");
+    let receipt = await web3.eth.sendSignedTransaction(raw);
+
+    let transferDetail = await TransferDetailService.createTransferDetail(
+      receipt.transactionHash,
+      fromAccount.id_account,
+      toAccount.id_account,
+      amount,
+      gasPrice * gasLimit
+    );
     res.json({
       success: true,
-      message: "Transfer USDT success",
+      message: "Chuyển USDT thành công",
       txHash: receipt.transactionHash,
     });
   } catch (error) {
-    // Trả về kết quả thất bại và thông tin lỗi
     console.log(error);
     res.status(400).json({
       success: false,
-      message: "Transfer USDT failed with error " + error.message,
+      message: "Chuyển USDT thất bại với lỗi: " + error.message,
     });
   }
 });
@@ -244,13 +259,18 @@ router.get("/txStatus/:txHash", async (req, res) => {
     // Lấy trạng thái của giao dịch từ blockchain
     const txReceipt = await web3.eth.getTransactionReceipt(txHash);
     // Lấy thông tin ví nguồn và đích từ cơ sở dữ liệu
-    const transferDetail = await TransferDetailService.getTransferDetailByTxh(txHash);
+    const transferDetail = await TransferDetailService.getTransferDetailByTxh(
+      txHash
+    );
     // Kiểm tra trạng thái của giao dịch
     if (txReceipt && txReceipt.status) {
       // Giao dịch đã thành công
       const fromAddress = tx.from;
       const toAddress = tx.to;
-      const amount = web3.utils.fromWei(transferDetail.amount.toString(), "ether");
+      const amount = web3.utils.fromWei(
+        transferDetail.amount.toString(),
+        "ether"
+      );
       res.json({
         success: true,
         message: "Transaction succeeded",
@@ -273,46 +293,48 @@ router.get("/txStatus/:txHash", async (req, res) => {
     });
   }
 });
-router.get('/latest-block-transactions', async (req, res) => {
+router.get("/latest-block-transactions", async (req, res) => {
   try {
-    const latestBlock = await web3.eth.getBlock('latest');
+    const latestBlock = await web3.eth.getBlock("latest");
     const txs = latestBlock.transactions;
-    const txDetails = await Promise.all(txs.map(tx => web3.eth.getTransaction(tx)));
+    const txDetails = await Promise.all(
+      txs.map((tx) => web3.eth.getTransaction(tx))
+    );
     res.json(txDetails);
   } catch (error) {
     console.log(error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ error: "Internal server error" });
   }
 });
 
-
-router.get('/checkStatueTransaction/:address', async(req, res) => {
+router.get("/checkStatueTransaction/:address", async (req, res) => {
   try {
     const address = req.params.address;
     console.log(address);
-    const latestBlock = await web3.eth.getBlock('latest');
+    const latestBlock = await web3.eth.getBlock("latest");
     const txs = latestBlock.transactions;
-    const txDetails = await Promise.all(txs.map(tx => web3.eth.getTransaction(tx)));
-    
+    const txDetails = await Promise.all(
+      txs.map((tx) => web3.eth.getTransaction(tx))
+    );
 
-      txDetails.forEach(element => {
-       console.log(element.to === address);
+    txDetails.forEach((element) => {
+      console.log(element.to === address);
 
-        if(element.to === address)
-        {
-          return res.status(200).json({to: element.to, from: element.from, amount:  web3.utils.fromWei(element.value, 'ether')})
-        }
-      });  
-    
+      if (element.to === address) {
+        return res
+          .status(200)
+          .json({
+            to: element.to,
+            from: element.from,
+            amount: web3.utils.fromWei(element.value, "ether"),
+          });
+      }
+    });
+
     res.json(txDetails);
-  
-
   } catch (error) {
-    res.status(404).json({message: "No transaction found for this address"});
-
+    res.status(404).json({ message: "No transaction found for this address" });
   }
-})
-
-
+});
 
 module.exports = router;
