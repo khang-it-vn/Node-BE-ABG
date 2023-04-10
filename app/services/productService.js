@@ -59,7 +59,6 @@ class ProductService{
 
     static async findByPk(pk)
     {
-        console.log(Product);
         const product = await Product.findByPk(pk);
         if(!product)
         {

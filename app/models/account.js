@@ -23,6 +23,10 @@ const Account = sequelize.define('account', {
     type: Sequelize.STRING,
     allowNull: false
   },
+  publicKey: {
+    type: Sequelize.STRING,
+    allowNull: false
+  },
   mpass: {
     type: Sequelize.STRING
   },

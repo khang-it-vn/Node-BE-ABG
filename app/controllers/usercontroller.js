@@ -70,7 +70,7 @@ router.get('/product/:id',verifyToken, async(req, res) => {
     {
         return res.status(200).json(product);
     }
-    return res.status(404);
+    return res.status(404).json({message: "404: Not found"});
 })
 
 router.get('/products/:keyword', verifyToken, async(req, res) => {

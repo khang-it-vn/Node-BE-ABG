@@ -81,6 +81,18 @@ class AccountService {
       return null;
     }
   }
+  static async getAccountByAddress(address) {
+    try {
+      const account = await Account.findOne({ where: { address } });
+      if (!account) {
+        return null;
+      }
+      return account.toJSON();
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
 }
 
 module.exports = AccountService;
