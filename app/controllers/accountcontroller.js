@@ -198,9 +198,16 @@ router.get("/getBalance", verifyToken, async (req, res) => {
 });
 router.post("/transferUSDT", verifyToken, async (req, res) => {
   try {
-    let { toAddress, amount } = req.body;
-    console.log(toAddress);
+    let { toAddress, amount, mpass } = req.body;
     let fromAddress = req.userData.user.address;
+
+    // get info account 
+    let toAccount = await AccountService.getAccountByAddress(toAddress);
+    let fromAccount = await AccountService.getAccountByAddress(fromAddress);
+    if(mpass !== fromAccount.mpass)
+    {
+      return res.status(403).json({message: "Failed Mpass"});
+    }
     let decimals = await usdtContract.methods.decimals().call();
     let amountToSend = web3.utils.toWei(amount.toString(), "ether");
     let txCount = await web3.eth.getTransactionCount(fromAddress);
@@ -216,12 +223,11 @@ router.post("/transferUSDT", verifyToken, async (req, res) => {
     let txObject = {
       nonce: web3.utils.toHex(txCount),
       to: process.env.USDT_CONTRACT_ADDRESS,
-      gasLimit: web3.utils.toHex(210000), // sdjadks
+      gasLimit: web3.utils.toHex(21000), // 100000
       gasPrice: web3.utils.toHex(gasPrice), // dsyfuidsf
       data: usdtContract.methods.transfer(toAddress, amountToSend).encodeABI(),
     };
-    let toAccount = await AccountService.getAccountByAddress(toAddress);
-    let fromAccount = await AccountService.getAccountByAddress(fromAddress);
+    
     let tx = new Tx(txObject, { chain: "mainnet", hardfork: "petersburg" });
 
     tx.sign(Buffer.from(fromAccount.privateKey.substring(2), "hex"));
@@ -293,6 +299,7 @@ router.get("/txStatus/:txHash", async (req, res) => {
     });
   }
 });
+
 router.get("/latest-block-transactions", async (req, res) => {
   try {
     const latestBlock = await web3.eth.getBlock("latest");
@@ -331,7 +338,7 @@ router.get("/checkStatueTransaction/:address", async (req, res) => {
       }
     });
 
-    res.json(txDetails);
+    res.status(404).json({message: "Not found"});
   } catch (error) {
     res.status(404).json({ message: "No transaction found for this address" });
   }
@@ -383,7 +390,14 @@ router.get("/getHistoryReceive", verifyToken, async (req, res) => {
 
 router.get('/checkAccountFromAddress/:address', verifyToken, async (req, res ) => {
     try {
+      const addressCurrent = req.userData.user.address;
       const address = req.params.address;
+      console.log(address);
+      console.log(addressCurrent);
+      if(addressCurrent === address)
+      {
+        return res.status(404).json({message: "Undefined account"});
+      }
       const wallet = await AccountService.getAccountByAddress(address);
       if(!wallet)
       {
@@ -412,4 +426,66 @@ router.get("/getBalanceFromAddress/:address", verifyToken, async (req, res) => {
     balance: web3.utils.fromWei(balance, "mwei"),
   });
 });
+
+router.get('/getFees', verifyToken, async (req, res) => {
+
+  // Sử dụng web3 để lấy thông tin chi phí ước tính
+    const gasPrice = await web3.eth.getGasPrice();
+    const gasLimit = 100000;
+    const estimatedFee = web3.utils.fromWei((gasPrice * gasLimit).toString(), 'ether');
+    res.json({
+      success: true,
+      message: "Estimated fee",
+      fee: estimatedFee,
+    });
+})
+
+
+// API to check if user's wallet address exists in the latest 10 blocks
+router.get("/checkWalletAddressInLatestBlocks/:address", async (req, res) => {
+  try {
+    console.log(req.params.address);
+    const address = req.params.address;
+    const latestBlockNumber = await web3.eth.getBlockNumber();
+    const blockNumbers = Array.from(
+      { length: 10 },
+      (_, i) => latestBlockNumber - i
+    );
+    const blocks = await Promise.all(
+      blockNumbers.map((blockNumber) =>
+        web3.eth.getBlock(blockNumber, true)
+      )
+    );
+    const txs = blocks.flatMap((block) =>
+      block.transactions.map((tx) => ({
+        to: tx.to,
+        from: tx.from,
+        value: tx.value,
+      }))
+    );
+    const txDetails = txs.filter((tx) => tx.to === address || tx.from === address);
+
+    if (txDetails.length > 0) {
+      return res.status(200).json({
+        success: true,
+        message: "Wallet address exists in the latest 10 blocks",
+        transactions: txDetails,
+      });
+    } else {
+      return res.status(404).json({
+        success: false,
+        message: "Wallet address does not exist in the latest 10 blocks",
+      });
+    }
+
+
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+router.get('/xinchao', (req, res) => {
+  res.send('xin chào')
+})
 module.exports = router;
